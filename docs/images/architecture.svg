@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="940" viewBox="0 0 1440 940" font-family="Segoe UI, PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#64748b"/></marker>
+<marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/></marker>
+</defs>
+<rect width="1440" height="940" fill="#ffffff"/>
+<rect x="48" y="110" width="336" height="320" rx="14" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1.6"/>
+<text x="72" y="146" font-size="20" fill="#3730a3" font-weight="700">控制端 · Windows</text>
+<text x="72" y="172" font-size="13" fill="#6366f1">i5-12450H / 16GB / 无独显</text>
+<rect x="68" y="196" width="296" height="46" rx="8" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.4"/>
+<text x="84" y="225" font-size="13" fill="#334155">改代码 · 改配置 · 看日志</text>
+<rect x="68" y="252" width="296" height="46" rx="8" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.4"/>
+<text x="84" y="281" font-size="13" fill="#334155" font-family="Consolas, Monaco, monospace">node scripts/secrets.mjs</text>
+<rect x="68" y="308" width="296" height="46" rx="8" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.4"/>
+<text x="84" y="337" font-size="13" fill="#334155">git push → Gitee</text>
+<rect x="68" y="364" width="296" height="46" rx="8" fill="#ffffff" stroke="#c7d2fe" stroke-width="1.4"/>
+<text x="84" y="393" font-size="13" fill="#334155">SSH → 算力端（scp / systemctl）</text>
+<rect x="48" y="480" width="336" height="86" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.4"/>
+<text x="72" y="512" font-size="15" fill="#0f172a" font-weight="700">Gitee 公开仓库</text>
+<text x="72" y="538" font-size="12.5" fill="#475569" font-family="Consolas, Monaco, monospace">Vickrs/agent-dual-machine · MIT</text>
+<path d="M 226 432 L 226 472" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ad)" />
+<text x="238" y="458" font-size="11.5" fill="#64748b">git push</text>
+<rect x="48" y="630" width="336" height="104" rx="12" fill="#fff1f2" stroke="#fda4af" stroke-width="1.4"/>
+<text x="72" y="662" font-size="15" fill="#be123c" font-weight="700">主控端 vault</text>
+<text x="72" y="686" font-size="12.5" fill="#9f1239" font-family="Consolas, Monaco, monospace">~/.secrets/qq-bridge.env</text>
+<text x="72" y="710" font-size="12" fill="#be123c">项目目录之外 · 权限 600 · 唯一明文副本</text>
+<rect x="470" y="110" width="640" height="760" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.8"/>
+<text x="496" y="146" font-size="20" fill="#0f172a" font-weight="700">算力端 · Ubuntu 24.04</text>
+<text x="496" y="172" font-size="13" fill="#64748b">i7-9750H / 32GB / RTX 2060 6GB</text>
+<rect x="510" y="200" width="560" height="104" rx="12" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1.4"/>
+<text x="536" y="236" font-size="17" fill="#047857" font-weight="700">Ollama · qwen3.5:4b</text>
+<text x="536" y="262" font-size="12.5" fill="#047857" font-family="Consolas, Monaco, monospace">127.0.0.1:11434 · num_ctx 4096 · 55 tok/s</text>
+<text x="536" y="284" font-size="11.5" fill="#059669">全局只跑一个模型，调 Ollama 的进程必须共用同一个 ctx</text>
+<rect x="510" y="348" width="410" height="52" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1.4"/>
+<text x="526" y="371" font-size="12" fill="#6d28d9" font-family="Consolas, Monaco, monospace">/run/user/1000/qq-bridge.env</text>
+<text x="526" y="390" font-size="11" fill="#7c3aed">tmpfs 内存 · 600 · 重启即消失</text>
+<rect x="510" y="444" width="560" height="170" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.4"/>
+<text x="536" y="478" font-size="17" fill="#1d4ed8" font-weight="700">qq-bridge.mjs</text>
+<text x="536" y="499" font-size="11.5" fill="#2563eb">systemd --user · 零依赖 · 单实例（锁文件防双开）</text>
+<rect x="536" y="514" width="245" height="40" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.4"/>
+<text x="550" y="539" font-size="12" fill="#1e40af">① 规则快通道 · 0ms</text>
+<rect x="810" y="514" width="245" height="40" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.4"/>
+<text x="824" y="539" font-size="12" fill="#1e40af">② 单 token 判定 · 167ms</text>
+<rect x="536" y="564" width="245" height="40" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.4"/>
+<text x="550" y="589" font-size="12" fill="#1e40af">③ &lt;calc&gt; 白名单求值 · 17ms</text>
+<rect x="810" y="564" width="245" height="40" rx="8" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.4"/>
+<text x="824" y="589" font-size="12" fill="#1e40af">④ 三层记忆 · 1100 字预算</text>
+<rect x="510" y="740" width="560" height="100" rx="12" fill="#fef3c7" stroke="#fcd34d" stroke-width="1.4"/>
+<text x="536" y="776" font-size="17" fill="#b45309" font-weight="700">SnowLuma · OneBot v11</text>
+<text x="536" y="799" font-size="12.5" fill="#b45309">WebSocket 0.0.0.0:3001</text>
+<text x="536" y="820" font-size="11.5" fill="#d97706">群消息全量上报（不限 @），桥自己判断要不要接话</text>
+<rect x="1170" y="740" width="220" height="100" rx="12" fill="#fdf2f8" stroke="#f9a8d4" stroke-width="1.4"/>
+<text x="1194" y="778" font-size="17" fill="#be185d" font-weight="700">QQ 群</text>
+<text x="1194" y="802" font-size="12" fill="#be185d">19 个群 / 3759 人</text>
+<path d="M 1070 790 L 1162 790" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#a)" marker-start="url(#a)"/>
+<text x="1078" y="780" font-size="11" fill="#475569">群消息</text>
+<rect x="1170" y="380" width="220" height="110" rx="12" fill="#f0f9ff" stroke="#7dd3fc" stroke-width="1.4"/>
+<text x="1194" y="412" font-size="15" fill="#0369a1" font-weight="700">Tavily 搜索 API</text>
+<text x="1194" y="436" font-size="12" fill="#0284c7">仅判定为 S 时才调</text>
+<text x="1194" y="458" font-size="11.5" fill="#0284c7">云端 · Key 走环境变量</text>
+<path d="M 1070 470 L 1162 450" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#a)" />
+<text x="1076" y="498" font-size="11" fill="#475569">需联网时</text>
+<path d="M 384 146 L 462 146" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ad)" />
+<text x="423" y="137" font-size="11" fill="#64748b" text-anchor="middle">SSH</text>
+<path d="M 384 682 L 440 682 L 440 374 L 502 374" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ad)" />
+<text x="48" y="616" font-size="11.5" fill="#64748b">secrets.mjs push · 每次开机后授权一次</text>
+<path d="M 620 400 L 620 438" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ad)" />
+<text x="632" y="424" font-size="10.5" fill="#7c3aed">EnvironmentFile 注入（只给桥用）</text>
+<path d="M 985 740 L 985 622" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#a)" />
+<text x="975" y="700" font-size="12" fill="#475569" text-anchor="end">WS 3001 · 全量上报</text>
+<path d="M 985 444 L 985 312" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#a)" />
+<text x="975" y="330" font-size="12" fill="#475569" text-anchor="end">HTTP /api/chat</text>
+<path d="M 48 908 L 98 908" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#a)" />
+<text x="108" y="912" font-size="12" fill="#475569">运行时数据流</text>
+<path d="M 212 908 L 262 908" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ad)" />
+<text x="272" y="912" font-size="12" fill="#475569">部署 / 授权（由控制端发起）</text>
+<text x="1390" y="912" font-size="11.5" fill="#94a3b8" text-anchor="end">仓库内地址 / 群号 / 账号均为占位符</text>
+</svg>
