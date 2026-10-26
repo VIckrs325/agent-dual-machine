@@ -1,0 +1,56 @@
+# QQ 桥的 systemd user 服务（版本化备份，实际生效的是 ~/.config/systemd/user/qq-bridge.service）
+#
+# 安装：
+#   mkdir -p ~/.config/systemd/user
+#   cp config/systemd/qq-bridge.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable qq-bridge
+#   loginctl enable-linger "$USER"      # 注销后 user manager 仍在（/run/user/<uid> 也还在）
+#   node scripts/secrets.mjs push --host <user>@<host>   # 由主控端推送密钥并启动
+#
+# ★ 密钥不落盘：EnvironmentFile 指向 %t（= /run/user/<uid>，tmpfs，内存）。
+#   - 文件由 `scripts/secrets.mjs push` 从主控端的 vault 推入，权限 600。
+#   - 机器重启 → tmpfs 清空 → EnvironmentFile 不存在 → systemd 判定启动失败（failed）。
+#     这是**故意的**：没有显式授权就不上线，不会带着空 token 静默跑。
+#   - 想恢复上线：在主控端执行一次 `node scripts/secrets.mjs push --host ...`。
+#   - 想临时下线：`node scripts/secrets.mjs revoke --host ...`（删缓存 + 停服务）。
+#
+# 运维：
+#   systemctl --user status  qq-bridge
+#   systemctl --user restart qq-bridge
+#   journalctl --user -u qq-bridge -f
+#
+# 注意：桥内置单实例锁（bridge/.bridge.pid）。服务在跑时再手动 nohup 起一个，
+#       第二个会立刻退出；但更省事的是只保留 systemd 这一种启动方式。
+
+[Unit]
+Description=QQ OneBot -> Ollama bridge
+After=network-online.target ollama.service
+Wants=network-online.target ollama.service
+# StartLimit 必须放 [Unit]（放 [Service] 已是废弃写法）。
+# RestartSec=5s 时 5 次/10s 的默认值永远凑不满 → 无限重试；这里改成 3 次/60s。
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.openclaw/workspace/projects/agent-dual-machine/bridge
+# %t = /run/user/<uid>（tmpfs）。密钥只存在于内存，重启即失效。
+# 加 "-" 前缀：文件缺失时不在 EnvironmentFile 这一层失败，而是交给下面的 ExecStartPre
+# 去判 —— 因为 EnvironmentFile 的加载发生在所有 ExecStartPre 之前，不加 "-" 的话
+# 报错信息只有一句 "Failed to load environment files"，也拦不住 Restart=always 重试。
+EnvironmentFile=-%t/qq-bridge.env
+
+# 缓存缺失（例如刚重启）时给出人话提示，并以 78 退出。
+# 配合 RestartPreventExitStatus=78，避免 Restart=always 在这里无限重试。
+ExecStartPre=/bin/sh -c 'test -r %t/qq-bridge.env || { echo "[fatal] 缺少 %t/qq-bridge.env：密钥未授权。请在主控端执行 node scripts/secrets.mjs push --host <目标>"; exit 78; }'
+RestartPreventExitStatus=78
+
+ExecStartPre=/usr/bin/node %h/.openclaw/workspace/projects/agent-dual-machine/scripts/check-bridge-features.mjs
+ExecStart=/usr/bin/node %h/.openclaw/workspace/projects/agent-dual-machine/bridge/qq-bridge.mjs
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target

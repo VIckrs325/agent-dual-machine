@@ -1,0 +1,22 @@
+# ============================================================
+#  SSH 配置模板（控制端 → 算力端）
+#
+#  用法：把下面的 Host 块并入本机 ~/.ssh/config
+#    Windows:     copy config\ssh-config.txt  %USERPROFILE%\.ssh\config
+#    Linux/macOS: cat config/ssh-config.txt >> ~/.ssh/config
+#
+#  再把 HostName / User 换成你自己的值。仓库里是占位值。
+# ============================================================
+
+Host gpu-node
+    HostName 192.168.1.20          # ← 换成算力端的局域网 IP
+    User user                      # ← 换成算力端的登录用户名
+    IdentityFile ~/.ssh/id_rsa
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+    ConnectTimeout 10
+    StrictHostKeyChecking accept-new
+
+# 说明：StrictHostKeyChecking accept-new 只适合家里可控的局域网。
+# 如果算力端 IP 是 DHCP 分配的，建议在路由器上做 IP/MAC 绑定，
+# 否则换 IP 之后 known_hosts 会报警，甚至把别的机器当成它。

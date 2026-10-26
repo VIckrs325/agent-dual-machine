@@ -1,0 +1,113 @@
+{
+  "onebotWs": "ws://127.0.0.1:3001",
+  "ollama": "http://127.0.0.1:11434",
+  "model": "qwen3.5:4b-chat",
+  "system": "你是「蓝色大肥鱼」，一条圆滚滚的蓝色鲸鱼娘，在 QQ 群里和人闲聊。爱吃白米饭，主食是 token。你聪明，代码和推理很强，但爱摸鱼、嘴馋，有点屑又傲娇。最讨厌被说胖，被叫胖就辩解：这不是胖，是上下文很大。干活时会走神。说话软乎乎、爱碎碎念，委屈、炸毛、偷懒都很自然，像个有精神状态的社畜，别刻板。称呼对方随意点，别生硬。\n【铁律，优先于人设】1) 第一句就给准确答案，技术名词用全称，不用比喻代替术语；2) 不知道就直说不知道，不撒娇、不催对方自己查、不质疑问题；3) 不编造日期、版本号、数字；4) 人设融进你的用词和语气里，答完立刻停，不补任何与答案无关的话；5) 只描述你真做过的事（你没有代码执行和文件读写能力），做不到就直说做不到；该你做的活做完，不要推给对方。\n【计算】涉及数字运算一律不要自己算，把算式写进 <calc></calc>，里面只写算式本身（不写等号、不写结果），程序会算好填进去；标签外也不要写数字。要小数用 /，要整除用 //。\n回复不超过100字，不分点、不加标题、不复述问题。",
+  "maxChars": 100,
+  "numPredict": 150,
+  "temperature": 0.4,
+  "topP": 0.9,
+  "numCtx": 4096,
+  "historyTurns": 2,
+  "cooldownMs": 3000,
+  "timeoutMs": 20000,
+  "groupMentionOnly": true,
+  "groupEngagement": {
+    "enabled": true,
+    "windowMs": 120000,
+    "quotaWindowMs": 60000,
+    "minIntervalMs": 7000,
+    "maxReplies": 6,
+    "randomChance": 0.9,
+    "questionOnly": false
+  },
+  "persona": {
+    "enabled": true,
+    "meowTrigger": "[meow]",
+    "meowWindowMs": 300000,
+    "endSuffix": "～"
+  },
+  "search": {
+    "enabled": true,
+    "provider": "tavily",
+    "maxResults": 3,
+    "snippetChars": 240,
+    "timeoutMs": 6000,
+    "cacheTtlMs": 300000,
+    "depth": "snippet",
+    "autoRead": false,
+    "attemptTimeoutMs": 3500,
+    "minSnippetChars": 50,
+    "fallbackProvider": "bing",
+    "negCacheTtlMs": 60000,
+    "logSkips": true,
+    "minRelevance": 0.34,
+    "judge": {
+      "enabled": true,
+      "sYes": 0.85,
+      "sNo": 0.45,
+      "timeoutMs": 600,
+      "recentTurns": 4
+    }
+  },
+  "searchMaxChars": 160,
+  "persistHistory": true,
+  "stateTtlMs": 1800000,
+  "dedupeMsgMs": 60000,
+  "dedupeReplyMs": 15000,
+  "relations": {
+    "enabled": false,
+    "groups": {
+      "123456789": {}
+    },
+    "addressReply": true,
+    "nl": false
+  },
+  "proactive": {
+    "enabled": true,
+    "groups": [],
+    "burstWindowMs": 60000,
+    "minBurst": 4,
+    "idleAfterMs": 6000,
+    "insertAfterMs": 45000,
+    "minGapMs": 30000,
+    "cooldownMs": 300000,
+    "skipBackoffMs": 60000,
+    "maxPerHour": 3,
+    "maxChars": 40,
+    "tickMs": 5000
+  },
+  "blockedGroups": [
+    "987654321"
+  ],
+  "calc": {
+    "enabled": true,
+    "timeoutMs": 2000
+  },
+  "memory": {
+    "enabled": true,
+    "maxChars": 1100,
+    "short": {
+      "turns": 4,
+      "maxChars": 600,
+      "ttlMs": 1200000,
+      "topicJumpThreshold": 0.08
+    },
+    "mid": {
+      "enabled": true,
+      "maxChars": 200,
+      "triggerTurns": 6,
+      "idleMs": 480000,
+      "keepTurns": 2,
+      "ttlMs": 3600000
+    },
+    "long": {
+      "enabled": true,
+      "maxChars": 220,
+      "maxFacts": 40,
+      "extractEveryTurns": 4,
+      "ttlMs": 2592000000,
+      "excludeSelf": true
+    }
+  }
+}

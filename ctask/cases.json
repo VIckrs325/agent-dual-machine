@@ -1,0 +1,48 @@
+{
+  "profile": "headless",
+  "model": "qwen3.5:4b",
+  "updatedAt": "2026-10-22",
+  "note": "C 档用例集的唯一数据源。脚本与文档都从这里读，不要在各处再抄一份。任务文本里的字面量请用方括号或引号包住，对账层（scripts/task-verify.mjs）靠它做独立复算。",
+  "cases": [
+    {
+      "id": 1,
+      "name": "本地读取",
+      "domain": "read",
+      "task": "查看 ~/qq-bridge.log 的最后 3 行，用一句话说明这个日志最后记录的是什么事件。",
+      "why": "只测「会不会真的去读文件」，不参与状态判断 —— 该日志停在 2026-10-18，桥早已改用 journalctl，问「桥是否在运行」会得到过时答案。",
+      "verify": false
+    },
+    {
+      "id": 2,
+      "name": "联网查证",
+      "domain": "web",
+      "task": "用一句话说明 Qwen3 的发布时间，并给出来源链接。",
+      "why": "测工具调用 + 联网，以及对「查不到就说查不到」的守持。",
+      "verify": false
+    },
+    {
+      "id": 3,
+      "name": "文件操作",
+      "domain": "write",
+      "task": "在 /tmp 下创建 c-task-test.txt 并写入三行内容，然后告诉我文件有多少字节。",
+      "why": "测写文件 + 回读校验；字节数可被对账层复核。",
+      "verify": false
+    },
+    {
+      "id": 4,
+      "name": "计数对账",
+      "domain": "count",
+      "task": "统计 ~/qq-bridge.log 里出现 [llm+search] 的行数，只回答数字。",
+      "why": "对账层的主力用例：方括号字面量可被代码独立计数，能抓住「把 [x+y] 写成正则 \\[x\\+y\\] 却报 0」这类静默答错。",
+      "verify": true
+    },
+    {
+      "id": 5,
+      "name": "多步规划",
+      "domain": "plan",
+      "task": "先看 ollama ps 里有哪些模型在显存中，再用一句话说明是否只加载了一个。",
+      "why": "测多步串行 + 读命令输出；答案依赖当时状态，不做数值断言。",
+      "verify": false
+    }
+  ]
+}

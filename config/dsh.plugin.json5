@@ -1,0 +1,37 @@
+// ============================================================
+// DSH（DeepSeek Harness）工程沙箱插件配置片段
+// 说明：这是「片段」，需合并进 ~/.openclaw/openclaw.json 顶层。
+// ⚠️ DSH 为实验性插件，字段以官方文档为准，本文件仅作参考骨架。
+// 凭据来源：~/.dsh/.credentials.yaml（DSH 网页 Models 页生成）
+//           或环境变量 DEEPSEEK_API_KEY。
+// ============================================================
+{
+  plugins: {
+    allow: ["dsh"], // 必需：把 dsh 加入插件白名单
+
+    entries: {
+      dsh: {
+        config: {
+          // 嵌入代理走哪个 provider / model（指向上面 providers 里的 deepseek）
+          modelProvider: "deepseek",
+          model: "deepseek-chat",
+
+          // 沙箱视为可写的工作区根目录（替换为 2060 本实际路径）
+          workspaceRoot: "/home/REPLACE_ME/agent-workspace",
+
+          // 单轮安全上限（默认 900000ms = 15 分钟）
+          turnTimeoutMs: 900000,
+        },
+      },
+    },
+  },
+
+  // 激活方式二选一（推荐 A）：
+  // A. 把默认模型指向 dsh 前缀，任何 dsh/ 开头的模型 id 都会路由到 DSH 代理
+  //    agents.defaults.model = "dsh/deepseek-chat"
+  // B. 在某个模型条目上钉住 agentRuntime
+  //    models: { "deepseek/deepseek-chat": { agentRuntime: { id: "dsh" } } }
+
+  // 调试：OPENCLAW_DSH_DEBUG=1 启动网关可看 DSH 内部日志
+  // 无人值守网关需设 DSH_PERMISSION_MODE=danger-full-access，否则沙箱授权默认拒绝
+}

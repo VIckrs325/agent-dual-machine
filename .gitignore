@@ -1,0 +1,63 @@
+# ============================================================
+#  agent-dual-machine .gitignore
+#  原则：运行时状态、隐私数据、本地备份一律不进版本库
+#  2026-10-22 首次创建
+# ============================================================
+
+# --- 绝对不提交：群成员/聊天记录（含真实 QQ 号、昵称、别名）---
+bridge/.relations.json
+bridge/.relations.json.*
+bridge/.state.json
+bridge/.state.json.*
+bridge-test/.relations.json
+bridge-test/.relations.json.*
+bridge-test/.state.json
+bridge-test/.state.json.*
+
+# --- 进程锁（运行时生成）---
+.bridge.pid
+bridge/.bridge.pid
+bridge-test/.bridge.pid
+
+# --- 任务轨迹：含外部搜索结果、抓取正文、完整问答 ---
+btask/traces/
+btask/*.jsonl
+
+# --- 本地备份（配置 / 代码回滚用）---
+*.bak
+*.bak-*
+config.json.*.bak
+*.backup
+*.orig
+*.tmp
+
+# --- 环境变量（含真实密钥，绝不提交）---
+.env
+.env.*
+!.env.example
+
+# --- 线上真实配置（含真实群号等标识符）---
+# 仓库里只放 bridge/config.example.json，clone 后复制一份再改
+bridge/config.json
+bridge-test/config.json
+
+# --- 测试双轨目录：同一份代码的第二个副本 ---
+# 用 git worktree add ../bridge-test -b test 或 cp -a bridge bridge-test 生成，不入库
+bridge-test/
+
+# --- 依赖与日志 ---
+node_modules/
+*.log
+npm-debug.log*
+
+# --- 编辑器 / 系统 ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+
+# ============================================================
+#  注意：releases/ 是发布快照（仅 4 个 .mjs，无配置无隐私），
+#  体积可忽略（约 80K/份），保留以便回滚追溯，故不排除。
+# ============================================================

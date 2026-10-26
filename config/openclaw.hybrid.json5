@@ -1,0 +1,85 @@
+// ============================================================
+// 阶段二：OpenClaw 双后端混合调度配置（云端 + 本地 Ollama）
+// 部署位置：2060 本 ~/.openclaw/openclaw.json
+// 默认路由走云端；简单/短上下文任务切本地 7B，失败自动 fallback 云端。
+// ============================================================
+{
+  env: {
+    DEEPSEEK_API_KEY: "sk-REPLACE_ME", // TODO: 替换为真实 DeepSeek 密钥
+  },
+
+  models: {
+    mode: "merge",
+    providers: {
+      // 云端：复杂任务 / 长链路 / 高准确率
+      deepseek: {
+        baseUrl: "https://api.deepseek.com/v1",
+        apiKey: "${DEEPSEEK_API_KEY}",
+        api: "openai-completions",
+        timeoutSeconds: 120,
+        models: [
+          {
+            id: "deepseek-chat",
+            name: "DeepSeek-V3 (cloud)",
+            contextWindow: 128000,
+            maxTokens: 8192,
+            reasoning: false,
+            inputTypes: ["text"],
+          },
+        ],
+      },
+
+      // 本地：简单任务 / 短上下文，省 Token、无平台依赖
+      ollama: {
+        baseUrl: "http://127.0.0.1:11434/v1",
+        apiKey: "ollama", // 本地无需真实 key，占位即可
+        api: "openai-completions",
+        timeoutSeconds: 300,
+        requiresStringContent: true, // 7B 后端兼容：内容按纯字符串发送
+        models: {
+          // 实测（2026-10-18）：57 tok/s，32k 全显存零掉速；支持 tools/vision/thinking
+          // 主力本地模型
+          "qwen3.5:4b": {
+            name: "本地 Qwen3.5-4B（推荐主力）",
+            contextWindow: 32768, // 实测 32k 全显存；基础提示 10.9k，必须 ≥16k
+            maxTokens: 2048,
+            inputTypes: ["text", "image"],
+            reasoning: false, // 简单任务关思考更快；复杂任务可在请求里开
+            cost: { input: 0, output: 0 },
+          },
+          // 备选：自建 7B，实测 30 tok/s。注意它不受 think:false 控制，
+          // 且思考质量较差（基线测试 3 例全败），默认不启用。
+          "ds7b:latest": {
+            name: "本地 DS-7B（备选，不推荐）",
+            contextWindow: 32768, // 原 Modelfile 写死 4096，需 OLLAMA_CONTEXT_LENGTH 覆盖
+            maxTokens: 2048,
+            reasoning: true,
+            cost: { input: 0, output: 0 },
+          },
+          "deepseek-r1:7b": {
+            name: "本地 DeepSeek-R1-7B (Q3_K_M)",
+            contextWindow: 16384, // 至少 16k，否则装不下 OpenClaw 基础提示
+            maxTokens: 2048,
+            reasoning: true,
+            cost: { input: 0, output: 0 },
+          },
+        },
+      },
+    },
+  },
+
+  agents: {
+    defaults: {
+      // 默认走云端，保证复杂任务成功率
+      model: {
+        primary: "deepseek/deepseek-chat",
+        // 简单任务手动切本地：/model ollama/qwen3.5:4b
+      },
+      sandbox: {
+        mode: "non-main",
+        scope: "session",
+        workspaceAccess: "rw",
+      },
+    },
+  },
+}

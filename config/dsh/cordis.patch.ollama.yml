@@ -1,0 +1,43 @@
+# ============================================================
+# DSH 本地模型补丁（Ollama provider）
+# 用法：内容追加/写入 ~/.dsh/profiles/<profile>/cordis.patch.yml
+#
+# ⚠️ 关键：自定义 provider 必须挂在 llm-pi-ai 插件下。
+#    @deepseek-ai/dsh-llm 的 providers 只服务内置路由（deepseek 等，
+#    由 dsh-llm-deepseek 自带 adapter）；写在那里会报
+#    `no adapter registered for provider "ollama"`。
+#
+# 字段依据 @deepseek-ai/dsh-llm-pi-ai/README.zh.md（权威）：
+#   api: openai-completions / baseURL / models[].input
+# ============================================================
+
+- id: llm-pi-ai
+  name: "@deepseek-ai/dsh-llm-pi-ai"
+  config:
+    providers:
+      ollama:
+        displayName: "Ollama 本地"
+        api: openai-completions
+        baseURL: "http://127.0.0.1:11434/v1"
+        defaultContextWindow: 32768
+        defaultMaxTokens: 2048
+        models:
+          - id: "qwen3.5:4b"
+            name: "Qwen3.5-4B"
+            contextWindow: 32768
+            maxTokens: 2048
+            input: [text, image]
+          - id: "deepseek-r1:7b"
+            name: "DeepSeek-R1-7B"
+            contextWindow: 16384
+            maxTokens: 2048
+            input: [text]
+
+# 把默认模型指向本地（不想改默认就删掉这段）
+- id: agent-default-model
+  name: "@deepseek-ai/dsh-agent-default-model"
+  config:
+    provider: ollama
+    model: qwen3.5:4b
+    # 不要加 reasoningEffort：手工声明的模型没有 reasoning 元数据，
+    # getSupportedThinkingLevels 只返回 ["off"]，写了 low 会被拒。

@@ -1,0 +1,24 @@
+# 统一行尾为 LF。
+# 背景：这些脚本带 #!/usr/bin/env node / #!/bin/bash，
+# 一旦被 Windows 的 CRLF 污染，在 Linux/macOS 上会因 "bad interpreter" 直接跑不起来。
+* text=auto eol=lf
+
+*.mjs   text eol=lf
+*.js    text eol=lf
+*.json  text eol=lf
+*.json5 text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.sh    text eol=lf
+*.py    text eol=lf
+*.txt   text eol=lf
+
+# 二进制文件不做行尾转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.zip  binary
+*.gz   binary
